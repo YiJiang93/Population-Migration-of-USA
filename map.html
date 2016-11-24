@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Multiple Views</title>
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/topojson.v1.min.js"></script>
+
+    <style>
+        .states {
+            fill: #eee;
+            stroke: #ccc;
+            stroke-linejoin: round;
+        }
+
+    </style>
+</head>
+
+<body>
+<script>
+    var width = 400, height = 700, height1 = 300, radius = 5;
+    var margin = {top: 20, right: 20, bottom: 60, left: 60};
+
+    d3.json("https://lawdpls.github.io/05/airport.json", function(error, nodes) {
+        if (error) throw error;
+
+    var graph = d3.select("body").append("svg")
+                    .attr("width", width*2)
+                    .attr("height", height)
+                    .append("g")
+                    .attr("transform", "translate(-30, 80)");
+
+            var projection = d3.geoAlbersUsa()
+                    .scale(1000);
+
+            var path = d3.geoPath()
+                    .projection(projection);
+
+            d3.queue().defer(d3.json, "https://lawdpls.github.io/05/us.json")
+                    .await(ready);
+
+            function ready(error, us) {
+                if (error) throw error;
+
+                graph.append("path")
+                        .datum(topojson.feature(us, us.objects.states))
+                        .attr("class", "states")
+                        .attr("d", path);
+
+                var dot = graph.selectAll(".circle")
+                        .data(nodes)
+                        .enter().append("circle")
+                        .attr("class", "dot")
+                        .attr("id", function(d){
+                            return d.code;
+                        })
+                        .style("fill", "gray")
+                        .style("opacity", 0.5)
+                        .attr("r", 2)
+                        .attr("transform", function(d) { return "translate(" + projection([d.longitude, d.latitude]) + ")";})
+                dot.append("title")
+                        .text(function(d) { return d.code; });
+            }
+    });
+</script>
