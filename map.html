@@ -21,7 +21,7 @@
     var width = 400, height = 700, height1 = 300, radius = 5;
     var margin = {top: 20, right: 20, bottom: 60, left: 60};
 
-    d3.json("https://lawdpls.github.io/05/airport.json", function(error, nodes) {
+    d3.json("https://lawdpls.github.io/05/capitals.json", function(error, nodes) {
         if (error) throw error;
 
     var graph = d3.select("body").append("svg")
@@ -58,8 +58,21 @@
                         .style("opacity", 0.5)
                         .attr("r", 2)
                         .attr("transform", function(d) { return "translate(" + projection([d.longitude, d.latitude]) + ")";})
+                        .on("mouseover", function(d) {
+                            var circle = d3.select(this);
+                            circle.transition()
+                            .style("fill", "black")
+                            .style("opacity", 1)
+                            .attr("r", 5);
+                        })
+                        .on("mouseout", function(d) {
+                            var circle = d3.select(this);
+                            circle.style("fill", "gray")
+                                  .style("opacity", 0.5)
+                                  .attr("r", 2);
+                        })
                 dot.append("title")
-                        .text(function(d) { return d.code; });
+                        .text(function(d) { return "City Name: " + d.city + "\n" + "State: " + d.state + "\n" + "Coordinates on SVG: " + projection([d.longitude, d.latitude]); });
             }
     });
 </script>
