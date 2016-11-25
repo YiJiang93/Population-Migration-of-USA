@@ -26,6 +26,7 @@ style="position: absolute;left: 0;top:0;z-index: 0;"></canvas>
     var width = 1200, height = 700;
     var margin = {top: 20, right: 20, bottom: 60, left: 60};
     var state_capital={};
+    var canvas_capital={};
 
 
 
@@ -71,8 +72,9 @@ style="position: absolute;left: 0;top:0;z-index: 0;"></canvas>
                         .style("opacity", 0.5)
                         .attr("r", 2)
                         .attr("transform", function(d) {
-
                             state_capital[d.state] = projection([d.longitude, d.latitude])
+
+
                             return "translate(" + projection([d.longitude, d.latitude]) + ")";})
                         .on("mouseover", function(d) {
                             var circle = d3.select(this);
@@ -91,13 +93,17 @@ style="position: absolute;left: 0;top:0;z-index: 0;"></canvas>
                         .text(function(d) { return "City Name: " + d.city + "\n" + "State: " + d.state + "\n" + "Coordinates on SVG: " + projection([d.longitude, d.latitude]); });
 
                 for (var i = 0; i < nodes.length; i++) {
+                    canvas_capital[nodes[i].state]=[state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90]
                     ctx.beginPath();
                     ctx.arc(state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90, 5, 0, Math.PI * 2, true);
                     ctx.closePath();
                     ctx.fillStyle = "red";
                     ctx.fill();
-                    console.log([state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90])
-    }
+
+    };
+
+
             }
+
     });
 </script>
