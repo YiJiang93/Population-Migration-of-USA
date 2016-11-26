@@ -7,8 +7,8 @@
 
     <style>
         .states {
-            fill: #eee;
-            stroke: black;
+            fill: black;
+            stroke: white;
             stroke-linejoin: round;
         }
     </style>
@@ -82,7 +82,8 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                               .attr("r", 2);
                     })
             dot.append("title")
-                    .text(function(d) { return "City Name: " + d.city + "\n" + "State: " + d.state + "\n" + "Coordinates on SVG: " + projection([d.longitude, d.latitude]); });
+                    .text(function(d) { return d.state  })
+                    .attr("fill","white");
             for (var i = 0; i < nodes.length; i++) {
                 canvas_capital[nodes[i].state] = [state_capital[nodes[i].state][0] - 20, state_capital[nodes[i].state][1] + 90]
                 ctx.beginPath();
@@ -111,23 +112,24 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
        this.color="blue";
 
        this.draw=function(){
-            /*
+
             var img=new Image();
             var x=this.x1;
             var y=this.y1;
             img.onload = function(){
-                ctx1.drawImage(img,x,y,10,10);
+                ctx1.drawImage(img,x,y,2,2);
             };
             //img.src = 'https://mdn.mozillademos.org/files/5395/backdrop.png';
             img.src="one-white-pixel.png"
-            */
 
 
+            /*
             ctx1.beginPath();
             ctx1.arc(this.x1, this.y1, this.radius, 0, Math.PI*2, true);
             ctx1.closePath();
             ctx1.fillStyle = this.color;
             ctx1.fill();
+            */
 
 
        }
