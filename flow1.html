@@ -93,8 +93,23 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                 ctx.fill();
                 //console.log([state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90])
             }
-            flow(canvas_capital, "Alabama");
+
+            var size = Object.keys(canvas_capital).length;
+
+            var elem = document.getElementById("canvas1");
             console.log(canvas_capital);
+
+            elem.addEventListener('click', function(event) {
+    			    var x = event.pageX,
+       	 		      y = event.pageY,
+       	 		      dots = document.getElementById("canvas");
+    			    for (var i = 0; i < size; i++) {
+    				    ctx1.clearRect(0, 0, canvas1.width, canvas.height);
+    				    if ((Math.abs(canvas_capital[nodes[i].state][0] - x) < 5) && (Math.abs(canvas_capital[nodes[i].state][1] - y) < 5)) {
+                  flow(canvas_capital, nodes[i].state);
+    				    }
+    			    }
+    		    }, false);
         }
     });
 
