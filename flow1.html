@@ -92,7 +92,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                 ctx.fill();
                 //console.log([state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90])
             }
-            flow(canvas_capital);
+            flow(canvas_capital, "Alabama");
             console.log(canvas_capital);
         }
     });
@@ -275,21 +275,35 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                                             pair=new migrant_move(instance, parseInt(starts[key]))
                                             return pair})
       //console.log(Object.keys(starts))
+
+      //console.log(stateMap);
+      //return stateMap
       return migrants
   }
 
-  function interMove(states){ // states is an object that contains all interstate migrant flow
-      stateMigrants=Object.keys(states).map(stateToMigrant)
-      stateMigrants.map(function(a_state){
+  function interMove(states, state){ // states is an object that contains all interstate migrant flow
+      //stateMigrants=Object.keys(states).map(stateToMigrant)
+      //stateInfo=new Object();
+      //stateMigrants=new Object();
+      //stateInfo[state]=states[state];
+      //stateMigrants[state]=
+      //console.log(stateInfo);
+      console.log(stateToMigrant(state));
+      stateToMigrant(state).map(function(d){d.move()})
+
+      /*
+      stateMigrants["Alabama"].map(function(a_state){
+
            a_state.map(function(d){
                  d.move();
                  //s=new migrant_move(d.migrant, d.number),
                  //console.log(d.constructor.generate);
            })
       })
+      */
   }
 
-  //interMove(states);
+  //interMove(states, "Alabama");
 
   //pair1=Object.keys(states).map(stateToMigrant)
   //console.log(pair1);
@@ -300,7 +314,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
 
 
 
-  function flow(state_capital){
+  function flow(state_capital, state){
 
         d3.csv("migration.csv", function(error, migration){
                 if (error) throw error;
@@ -330,15 +344,21 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       return migrants
                 }
 
-                function interMove(states){ // states is an object that contains all interstate migrant flow
-                    stateMigrants=Object.keys(states).map(stateToMigrant)
+                function interMove(states, state){ // states is an object that contains all interstate migrant flow
+
+
+                    console.log(stateToMigrant(state));
+                    stateToMigrant(state).map(function(d){d.move()})
+
+                    /*stateMigrants=Object.keys(states).map(stateToMigrant)
                     //console.log(stateMigrants)
                     stateMigrants.map(function(a_state){
                          a_state.map(function(d){d.move()})
                     })
+                    */
                 }
 
-                interMove(states)
+                interMove(states, state);
         })
   }
 
@@ -350,13 +370,12 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
 
 
       this.generate=function(){
-                  console.log(this.number);
                   if (this.number>0) {
 
                       migrants=new migrant(this.migrant.x1, this.migrant.y1, this.migrant.x2, this.migrant.y2)
                       migrants.animate()
-                      this.number-=5000
-                      console.log(this.number)
+                      this.number-=500
+                      //console.log(this.number)
                   }
                   else {
                       window.clearInterval(this.send);
@@ -368,7 +387,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
       this.move=function(){
           //this.generate()
           //console.log(this.number);
-          this.send=window.setInterval(this.generate.bind(this), 5000)
+          this.send=window.setInterval(this.generate.bind(this), 2500)
       }
 
 
