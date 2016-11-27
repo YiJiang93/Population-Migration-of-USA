@@ -27,7 +27,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     var ctx = canvas.getContext('2d');
     var canvas1 = document.getElementById('canvas1');
     var ctx1 = canvas1.getContext('2d');
-    var raf;
+    var isFlow=false;
 
 
     var width = 1200, height = 700;
@@ -100,13 +100,17 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             console.log(canvas_capital);
 
             elem.addEventListener('click', function(event) {
+                    isFlow=false;
     			    var x = event.pageX,
        	 		      y = event.pageY,
        	 		      dots = document.getElementById("canvas");
     			    for (var i = 0; i < size; i++) {
     				    ctx1.clearRect(0, 0, canvas1.width, canvas.height);
+
     				    if ((Math.abs(canvas_capital[nodes[i].state][0] - x) < 5) && (Math.abs(canvas_capital[nodes[i].state][1] - y) < 5)) {
-                  flow(canvas_capital, nodes[i].state);
+
+
+                            setTimeout(flow(canvas_capital, nodes[i].state), 3000);
     				    }
     			    }
     		    }, false);
@@ -132,7 +136,8 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             var x=this.x1;
             var y=this.y1;
             img.onload = function(){
-                ctx1.drawImage(img,x,y,2,2);
+                ctx1.globalAlpha = 1;
+                ctx1.drawImage(img,x,y,4,4);
             };
             //img.src = 'https://mdn.mozillademos.org/files/5395/backdrop.png';
             img.src="one-white-pixel.png"
@@ -387,24 +392,35 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
 
 
       this.generate=function(){
+
+
+              if (!isFlow){
+                  window.clearInterval(this.send)
+                  isFlow=true;
+
+              } else {
+
                   if (this.number>0) {
 
                       migrants=new migrant(this.migrant.x1, this.migrant.y1, this.migrant.x2, this.migrant.y2)
                       migrants.animate()
-                      this.number-=500
+                      this.number-=1
                       //console.log(this.number)
                   }
                   else {
+                      console.log(isFlow);
                       window.clearInterval(this.send);
-                      console.log("end");
+                      //console.log("end");
 
                   }
+              }
+
       }
 
       this.move=function(){
           //this.generate()
           //console.log(this.number);
-          this.send=window.setInterval(this.generate.bind(this), 2500)
+              this.send=window.setInterval(this.generate.bind(this), 2500);
       }
 
 
