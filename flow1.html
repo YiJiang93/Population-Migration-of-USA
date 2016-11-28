@@ -1,19 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Multiple Views</title>
+    <title>The Migration Flow</title>
     <script src="https://d3js.org/d3.v4.js"></script>
     <script src="https://d3js.org/topojson.v1.min.js"></script>
 
     <style>
+        body {
+          background: #006994;
+        }
+        #count {
+          position: absolute;
+          top: 50%;
+          left: 80%;
+        }
         .states {
-            fill: black;
-            stroke: white;
+            fill: #000030;
+            stroke: #ADD8E6;
             stroke-linejoin: round;
         }
     </style>
 </head>
 <body>
+<p id="count"></p>
 <canvas id="canvas" width="1200" height="700"
 style="position: absolute;left: 0;top:0;z-index: 0;"></canvas>
 
@@ -32,7 +41,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     var margin = {top: 20, right: 20, bottom: 60, left: 60};
     var state_capital={};
     var canvas_capital={};
-    d3.json("capital.json", function(error, nodes) {
+    d3.json("http://localhost:8080/CS573/capital.json", function(error, nodes) {
         if (error) throw error;
         //var canvas = document.getElementById('canvas');
         //var ctx = canvas1.getContext('2d');
@@ -49,6 +58,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                 .await(ready);
         function ready(error, us) {
             if (error) throw error;
+            console.log(us.objects.states)
             graph.append("path")
                     .datum(topojson.feature(us, us.objects.states))
                     .attr("class", "states")
@@ -82,7 +92,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                 ctx.beginPath();
                 ctx.arc(state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90, 5, 0, Math.PI * 2, true);
                 ctx.closePath();
-                ctx.fillStyle = "red";
+                ctx.fillStyle = "#98fb98";
                 ctx.fill();
                 //console.log([state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90])
             }
@@ -96,7 +106,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     			    for (var i = 0; i < size; i++) {
     				    ctx1.clearRect(0, 0, canvas1.width, canvas.height);
     				    if ((Math.abs(canvas_capital[nodes[i].state][0] - x) < 5) && (Math.abs(canvas_capital[nodes[i].state][1] - y) < 5)) {
-                            //setTimeout(flow(canvas_capital, nodes[i].state), 3000);
+                            console.log(nodes[i]);
                             flow(canvas_capital, nodes[i].state)
     				    }
     			    }
@@ -112,26 +122,26 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
        this.vx=(this.x2-this.x1)/((this.x1-this.x2)**2+(this.y1-this.y2)**2)**0.5;
        this.vy=(this.y2-this.y1)/((this.x1-this.x2)**2+(this.y1-this.y2)**2)**0.5;
        this.radius=1;
-       this.color="white";
+       this.color="#98fb98";
        this.draw=function(){
 
-            var img=new Image();
-            var x=this.x1;
-            var y=this.y1;
-            img.onload = function(){
-                ctx1.globalAlpha = 1;
-                ctx1.drawImage(img,x,y,2,2);
-            };
+            // var img=new Image();
+            // var x=this.x1;
+            // var y=this.y1;
+            // img.onload = function(){
+            //     ctx1.globalAlpha = 1;
+            //     ctx1.drawImage(img,x,y,2,2);
+            // };
             //img.src = 'https://mdn.mozillademos.org/files/5395/backdrop.png';
-            img.src="one-white-pixel.png"
-       /*
+            // img.src="one-white-pixel.png"
+       
 
             ctx1.beginPath();
             ctx1.arc(this.x1, this.y1, this.radius, 0, Math.PI*2, true);
             ctx1.closePath();
             ctx1.fillStyle = this.color;
             ctx1.fill();
-       */
+       
 
        }
        if (this.x1<this.x2){
@@ -290,7 +300,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
   //})
   //function(d){d.move()}
   function flow(state_capital, state){
-        d3.csv("migration.csv", function(error, migration){
+        d3.csv("https://lawdpls.github.io/05/migration.csv", function(error, migration){
                 if (error) throw error;
                 stateNames=d3.keys(migration[1])
                 //console.log(stateNames[1])
@@ -422,6 +432,11 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             ball.animate();
         }
   }
+  var ctVar = setInterval(function(){ myTimer() }, 1000);
+
+function myTimer() {
+    document.getElementById("count").innerHTML = count;
+}
   //if (balls.length>0) {window.setInterval(draw1, 500)};
 </script>
 
