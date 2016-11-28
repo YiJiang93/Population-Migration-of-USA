@@ -27,9 +27,8 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     var ctx = canvas.getContext('2d');
     var canvas1 = document.getElementById('canvas1');
     var ctx1 = canvas1.getContext('2d');
-    var isFlow=false;
 
-
+    var count=0;
     var width = 1200, height = 700;
     var margin = {top: 20, right: 20, bottom: 60, left: 60};
     var state_capital={};
@@ -100,7 +99,6 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             console.log(canvas_capital);
 
             elem.addEventListener('click', function(event) {
-                    isFlow=false;
     			    var x = event.pageX,
        	 		      y = event.pageY,
        	 		      dots = document.getElementById("canvas");
@@ -110,7 +108,8 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     				    if ((Math.abs(canvas_capital[nodes[i].state][0] - x) < 5) && (Math.abs(canvas_capital[nodes[i].state][1] - y) < 5)) {
 
 
-                            setTimeout(flow(canvas_capital, nodes[i].state), 3000);
+                            //setTimeout(flow(canvas_capital, nodes[i].state), 3000);
+                            flow(canvas_capital, nodes[i].state)
     				    }
     			    }
     		    }, false);
@@ -118,9 +117,8 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     });
 
 
-
+   migrant.instances = [];
    function migrant(x1,y1,x2,y2){
-
        this.x1=x1;
        this.x2=x2;
        this.y1=y1;
@@ -137,7 +135,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             var y=this.y1;
             img.onload = function(){
                 ctx1.globalAlpha = 1;
-                ctx1.drawImage(img,x,y,4,4);
+                ctx1.drawImage(img,x,y,2,2);
             };
             //img.src = 'https://mdn.mozillademos.org/files/5395/backdrop.png';
             img.src="one-white-pixel.png"
@@ -150,8 +148,6 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             ctx1.fillStyle = this.color;
             ctx1.fill();
             */
-
-
        }
 
 
@@ -225,6 +221,8 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
            //console.log(this.x1);
            if (Math.abs(this.x1-this.x2)<=this.radius && Math.abs(this.y1-this.y2)<=this.radius){
                //console.log(this.x1);
+               count+=50;
+               console.log(count);
                window.clearInterval(this.s);
                ctx1.clearRect(this.x1-this.radius*3, this.y1-this.radius*3, 6*this.radius, 6*this.radius);
            }
@@ -234,9 +232,14 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
        }
 
    migrant.prototype.animate=function(){
-
+           migrant.instances.push(this);
+           //console.log(migrant.instances.length);
            this.s=window.setInterval(this.prepare.bind(this), 10);
 
+   }
+
+   migrant.prototype.clear=function(){
+       window.clearInterval(this.s);
    }
 
   a=new migrant(625.4273287806287,454.7406243701706,197.21573906014282,552.4553265207218)
@@ -344,14 +347,16 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                 //console.log(stateNames[1])
                 //console.log(migration)
                 var states=new Object();
-                migration.forEach(function(d,i){
+                states[state]=migration[stateNames.indexOf(state)]
+
+                /*migration.forEach(function(d,i){
                       states[stateNames[i]]=d
-                })
+                })*/
+
+                console.log(stateNames.indexOf(state));
                 console.log(states);
 
                 var capital=state_capital;
-
-
 
                 function stateToMigrant(state){
                       end_coord=capital[state];
@@ -381,50 +386,71 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                 }
 
                 interMove(states, state);
+
+                if (migrant_move.instances.length>50){
+                     migrant.instances.forEach(function(d){d.clear()});
+                     migrant.instances=[];
+                     console.log(migrant.instances.length);
+                     migrant_move.instances.slice(0, 50).map(function(d){d.clear()});
+                     migrant_move.instances.splice(0,50);
+                     count=0;
+                     ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+                     //console.log(migrant_move.instances);
+                };
+                //console.log(migrant.instances.length);
         })
   }
 
+
+  migrant_move.instances = [];
 
   function migrant_move(instance, number){
 
       this.migrant=instance
       this.number=number
 
-
       this.generate=function(){
 
+          if (this.number>0) {
 
-              if (!isFlow){
-                  window.clearInterval(this.send)
-                  isFlow=true;
+              migrants=new migrant(this.migrant.x1, this.migrant.y1, this.migrant.x2, this.migrant.y2)
+              migrants.animate()
+              this.number-=50
+              //console.log(this.number)
+          }
+          else {
+              window.clearInterval(this.send);
+              //console.log("end");
 
-              } else {
+          }
 
-                  if (this.number>0) {
-
-                      migrants=new migrant(this.migrant.x1, this.migrant.y1, this.migrant.x2, this.migrant.y2)
-                      migrants.animate()
-                      this.number-=1
-                      //console.log(this.number)
-                  }
-                  else {
-                      console.log(isFlow);
-                      window.clearInterval(this.send);
-                      //console.log("end");
-
-                  }
-              }
 
       }
 
       this.move=function(){
+          migrant_move.instances.push(this);
+          //console.log(migrant_move.instances);
+          /*if (migrant_move.instances.length<50){
+              //migrant_move.instances.splice(0,1);
+              migrant_move.instances.push(this);
+          } else {
+              migrant_move.instances.map()
+              migrant_move.instances.splice(0,49);
+              migrant_move.instances.push(this);
+          }*/
+          //console.log(migrant_move.instances.length);
           //this.generate()
           //console.log(this.number);
-              this.send=window.setInterval(this.generate.bind(this), 2500);
+          this.send=window.setInterval(this.generate.bind(this), 2500);
       }
 
+      this.clear=function(){
+          window.clearInterval(this.send);
+      }
 
   }
+
+
 
 
   /*migrant_move.prototype.generate=function(){
