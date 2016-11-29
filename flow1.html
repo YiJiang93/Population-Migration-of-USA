@@ -12,10 +12,22 @@
         #count {
           position: absolute;
           top: 50%;
-          left: 80%;
+          left: 70%;
+          color: white;
+          font-size: 40px;
         }
         .states {
             fill: #000030;
+            stroke: #ADD8E6;
+            stroke-linejoin: round;
+        }
+        #secondary {
+          position: absolute;
+          top: 20%;
+          left: 68%;
+        }
+        .minimap {
+            fill: purple;
             stroke: #ADD8E6;
             stroke-linejoin: round;
         }
@@ -29,7 +41,8 @@ style="position: absolute;left: 0;top:0;z-index: 0;"></canvas>
 <canvas id="canvas1" width="1200" height="700"
 style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
 
-<svg></svg>
+<svg id="main"></svg>
+<svg id="secondary" width="300" height="200"></svg>
 
 <script>
     var canvas = document.getElementById('canvas');
@@ -41,11 +54,26 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     var margin = {top: 20, right: 20, bottom: 60, left: 60};
     var state_capital={};
     var canvas_capital={};
+    var names = [];
+    var revNames = {};
+    var selected = "";
+    d3.tsv("https://lawdpls.github.io/idname.tsv", function(tsv){
+    tsv.forEach(function(d,i){
+      // names[d.name] = d.id;
+      var name = d.name;
+      var id = d.id;
+      names.push({name, id});
+    });
+    tsv.forEach(function(d,i){
+      // names[d.name] = d.id;
+      revNames[d.id] = d.name;
+    });
+    // console.log(names)
     d3.json("http://localhost:8080/CS573/capital.json", function(error, nodes) {
         if (error) throw error;
         //var canvas = document.getElementById('canvas');
         //var ctx = canvas1.getContext('2d');
-        var graph = d3.select("svg")
+        var graph = d3.select("#main")
                         .attr("width", width)
                         .attr("height", height)
                         .append("g")
@@ -58,11 +86,19 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                 .await(ready);
         function ready(error, us) {
             if (error) throw error;
-            console.log(us.objects.states)
-            graph.append("path")
-                    .datum(topojson.feature(us, us.objects.states))
-                    .attr("class", "states")
-                    .attr("d", path);
+            var data = topojson.feature(us, us.objects.states).features;
+            // console.log(data)
+            // graph.append("path")
+            //         .datum(topojson.feature(us, us.objects.states))
+            //         .data(data)
+            //         .attr("class", "states")
+            //         .attr("d", path);
+            graph.selectAll("path")
+                 .data(data)
+                 .enter()
+                 .append("path")
+                 .attr("class", "states")
+                 .attr("d", path);
             var dot = graph.selectAll(".circle")
                     .data(nodes)
                     .enter().append("circle")
@@ -98,7 +134,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             }
             var size = Object.keys(canvas_capital).length;
             var elem = document.getElementById("canvas1");
-            console.log(canvas_capital);
+            // console.log(canvas_capital);
             elem.addEventListener('click', function(event) {
     			    var x = event.pageX,
        	 		      y = event.pageY,
@@ -106,12 +142,81 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     			    for (var i = 0; i < size; i++) {
     				    ctx1.clearRect(0, 0, canvas1.width, canvas.height);
     				    if ((Math.abs(canvas_capital[nodes[i].state][0] - x) < 5) && (Math.abs(canvas_capital[nodes[i].state][1] - y) < 5)) {
-                            console.log(nodes[i]);
-                            flow(canvas_capital, nodes[i].state)
+                  selected = nodes[i].state;
+                  // console.log(names);
+                  graph.selectAll("path")
+                      .style("fill", function(d){
+                      // console.log(d)
+                      for (var i = 0; i < names.length; i++) {
+                        if (names[i].name == selected && d.id == names[i].id) {
+                          return "red";
+                        }
+                      }
+                    })
+                  flow(canvas_capital, nodes[i].state);
     				    }
     			    }
+
+              var projection2 = d3.geoAlbersUsa()
+                .scale(400)
+                .translate([150, 100]);
+                d3.select(".minimap")
+                .remove();
+        if(selected != "") {
+              var path2 = d3.geoPath()
+                .projection(projection2);
+            d3.csv("https://lawdpls.github.io/05/migration.csv", function(error, mig){
+              d3.json("https://lawdpls.github.io/05/us.json", function(unitedState) {
+              var data2 = topojson.feature(unitedState, unitedState.objects.states).features;
+              // d3.tsv("https://lawdpls.github.io/idname.tsv", function(tsv){
+              // var names = {};
+              // tsv.forEach(function(d,i){
+              //     names[d.id] = d.name;
+              // });
+              
+              var id;
+              for (var j = 0; j < data2.length; j++) {
+                for (var i = 0; i < names.length; i++) {
+                  if (data2[j].id == names[i].id && names[i].name == selected) {
+                    id = data2[j].id;
+                    break;
+                  }
+                }
+              }
+              console.log(id)
+              var graph2 = d3.select("#secondary")
+                        .append("g")
+                        .attr("class", "minimap")
+                        .selectAll("path")
+                        .data(data2)
+                        .enter()
+                        .append("path")
+                        .attr("d", path2)
+                        .style("fill", function(d){
+                          if (d.id == id) {
+                            return "red";
+                          }
+                        })
+                        .style("opacity", function(d,i){
+                          // console.log(revNames[d.id])
+                          // console.log(mig[id][selected])
+                            if (d.id != id) {
+                              if (mig[id][revNames[d.id]] < 100) {
+                                return 0.1
+                              } else if (mig[id][revNames[d.id]] < 500) {
+                                return 0.4
+                              } else if (mig[id][revNames[d.id]] < 1000) {
+                                return 0.7
+                              }
+                            }
+                        })
+                        .attr("stroke", "white");
+        });
+});
+          }
     		    }, false);
         }
+    });
     });
    migrant.instances = [];
    function migrant(x1,y1,x2,y2){
@@ -122,7 +227,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
        this.vx=(this.x2-this.x1)/((this.x1-this.x2)**2+(this.y1-this.y2)**2)**0.5;
        this.vy=(this.y2-this.y1)/((this.x1-this.x2)**2+(this.y1-this.y2)**2)**0.5;
        this.radius=1;
-       this.color="#98fb98";
+       this.color="white";
        this.draw=function(){
 
             // var img=new Image();
@@ -202,7 +307,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
            if (Math.abs(this.x1-this.x2)<=this.radius && Math.abs(this.y1-this.y2)<=this.radius){
                //console.log(this.x1);
                count+=50;
-               console.log(count);
+               // console.log(count);
                window.clearInterval(this.s);
                ctx1.clearRect(this.x1-this.radius*3, this.y1-this.radius*3, 6*this.radius, 6*this.radius);
            }
@@ -304,29 +409,29 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                 if (error) throw error;
                 stateNames=d3.keys(migration[1])
                 //console.log(stateNames[1])
-                //console.log(migration)
+                // console.log(migration)
                 var states=new Object();
                 states[state]=migration[stateNames.indexOf(state)]
                 /*migration.forEach(function(d,i){
                       states[stateNames[i]]=d
                 })*/
-                console.log(stateNames.indexOf(state));
-                console.log(states);
+                // console.log(stateNames.indexOf(state));
+                // console.log(states);
                 var capital=state_capital;
                 function stateToMigrant(state){
                       end_coord=capital[state];
                       starts=states[state];
                       migrants=Object.keys(starts).map(function(key){
-                                                            start_coord=capital[key]
-                                                            instance=new migrant(start_coord[0], start_coord[1], end_coord[0], end_coord[1])
-                                                            pair=new migrant_move(instance, starts[key])
-                                                            return pair})
+                            start_coord=capital[key]
+                            instance=new migrant(start_coord[0], start_coord[1], end_coord[0], end_coord[1])
+                            pair=new migrant_move(instance, starts[key])
+                            return pair})
                       //console.log(Object.keys(starts))
                       //console.log(capital);
                       return migrants
                 }
                 function interMove(states, state){ // states is an object that contains all interstate migrant flow
-                    console.log(stateToMigrant(state));
+                    // console.log(stateToMigrant(state));
                     stateToMigrant(state).map(function(d){d.move()})
                     /*stateMigrants=Object.keys(states).map(stateToMigrant)
                     //console.log(stateMigrants)
@@ -339,7 +444,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                 if (migrant_move.instances.length>50){
                      migrant.instances.forEach(function(d){d.clear()});
                      migrant.instances=[];
-                     console.log(migrant.instances.length);
+                     // console.log(migrant.instances.length);
                      migrant_move.instances.slice(0, 50).map(function(d){d.clear()});
                      migrant_move.instances.splice(0,50);
                      count=0;
@@ -351,6 +456,8 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
   }
   migrant_move.instances = [];
   function migrant_move(instance, number){
+      var dudu = number;
+      // console.log(instance)
       this.migrant=instance
       this.number=number
       this.generate=function(){
@@ -362,7 +469,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
           }
           else {
               window.clearInterval(this.send);
-              //console.log("end");
+              // console.log(dudu);
           }
       }
       this.move=function(){
@@ -435,7 +542,9 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
   var ctVar = setInterval(function(){ myTimer() }, 1000);
 
 function myTimer() {
+  if(count != 0) {
     document.getElementById("count").innerHTML = count;
+  } 
 }
   //if (balls.length>0) {window.setInterval(draw1, 500)};
 </script>
