@@ -6,8 +6,13 @@
     <script src="https://d3js.org/topojson.v1.min.js"></script>
 
     <style>
+        path:hover {
+          fill:pink;
+          fill-opacity:0.7;
+        }
         body {
-          background: #006994;
+          /*background: #006994;*/
+          background: white;
         }
         #count {
           position: absolute;
@@ -17,8 +22,10 @@
           font-size: 40px;
         }
         .states {
-            fill: #000030;
-            stroke: #ADD8E6;
+            /*fill: #000030;*/
+            fill-opacity: 0; 
+            /*stroke: #ADD8E6;*/
+            stroke: gray;
             stroke-linejoin: round;
         }
         #secondary {
@@ -35,14 +42,16 @@
 </head>
 <body>
 <p id="count"></p>
+<div>
 <canvas id="canvas" width="1200" height="700"
 style="position: absolute;left: 0;top:0;z-index: 0;"></canvas>
 
 <canvas id="canvas1" width="1200" height="700"
 style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
 
-<svg id="main"></svg>
-<svg id="secondary" width="300" height="200"></svg>
+<svg id="main" style="position: absolute; left: 0; top: 0; z-index: 2;"></svg>
+</div>
+<svg id="secondary" width="300" height="200" style="z-index: 3;"></svg>
 
 <script>
     // reference: https://codepen.io/corenominal/pen/YqBrbo
@@ -70,7 +79,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
       revNames[d.id] = d.name;
     });
     // console.log(names)
-    d3.json("capital.json", function(error, nodes) {
+    d3.json("https://lawdpls.github.io/05/capital.json", function(error, nodes) {
         if (error) throw error;
         //var canvas = document.getElementById('canvas');
         //var ctx = canvas1.getContext('2d');
@@ -123,7 +132,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                     .attr("transform", function(d) {
                         return "translate(" + projection([d.longitude-0.5, d.latitude+0.5]) + ")";})
                     .attr("font-size", "11px")
-                    .attr("fill","white");
+                    .attr("fill","black");
             for (var i = 0; i < nodes.length; i++) {
                 canvas_capital[nodes[i].state] = [state_capital[nodes[i].state][0] - 20, state_capital[nodes[i].state][1] + 90]
                 ctx.beginPath();
@@ -136,6 +145,49 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             var size = Object.keys(canvas_capital).length;
             var elem = document.getElementById("canvas1");
             // console.log(canvas_capital);
+            d3.selectAll("path")
+              .on("click", function(d){
+                flow(canvas_capital, revNames[d.id]);
+                var projection2 = d3.geoAlbersUsa()
+                .scale(400)
+                .translate([150, 100]);
+                d3.select(".minimap")
+                .remove();
+                var path2 = d3.geoPath()
+                .projection(projection2);
+            d3.csv("https://lawdpls.github.io/05/migration.csv", function(error, mig){
+              d3.json("https://lawdpls.github.io/05/us.json", function(unitedState) {
+              var data2 = topojson.feature(unitedState, unitedState.objects.states).features;
+              var graph2 = d3.select("#secondary")
+                        .append("g")
+                        .attr("class", "minimap")
+                        .selectAll("path")
+                        .data(data2)
+                        .enter()
+                        .append("path")
+                        .attr("d", path2)
+                        .style("fill", function(o){
+                          if (o.id == d.id) {
+                            return "red";
+                          }
+                        })
+                        .style("opacity", function(o,i){
+                          // console.log(revNames[d.id])
+                          // console.log(mig[id][selected])
+                            if (o.id != d.id) {
+                              if (mig[d.id][revNames[o.id]] < 100) {
+                                return 0.1
+                              } else if (mig[d.id][revNames[o.id]] < 500) {
+                                return 0.4
+                              } else if (mig[d.id][revNames[o.id]] < 1000) {
+                                return 0.7
+                              }
+                            }
+                        })
+                        .attr("stroke", "white");
+            })
+            })
+              })
             elem.addEventListener('click', function(event) {
     			    var x = event.pageX,
        	 		      y = event.pageY,
@@ -465,7 +517,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
   }
 
   function renderer(){
-		ctx1.fillStyle = 'rgba(0, 105, 148, 0.05)';
+		ctx1.fillStyle = 'rgba(255, 255, 255, 0.05)';
         ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
 		window.requestAnimationFrame(renderer);
   }
