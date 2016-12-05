@@ -45,6 +45,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
 <svg id="secondary" width="300" height="200"></svg>
 
 <script>
+    // reference: https://codepen.io/corenominal/pen/YqBrbo
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
     var canvas1 = document.getElementById('canvas1');
@@ -69,7 +70,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
       revNames[d.id] = d.name;
     });
     // console.log(names)
-    d3.json("http://localhost:8080/CS573/capital.json", function(error, nodes) {
+    d3.json("capital.json", function(error, nodes) {
         if (error) throw error;
         //var canvas = document.getElementById('canvas');
         //var ctx = canvas1.getContext('2d');
@@ -241,11 +242,13 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             // img.src="one-white-pixel.png"
        
 
-            ctx1.beginPath();
+            /*ctx1.beginPath();
             ctx1.arc(this.x1, this.y1, this.radius, 0, Math.PI*2, true);
             ctx1.closePath();
             ctx1.fillStyle = this.color;
-            ctx1.fill();
+            ctx1.fill();*/
+            ctx1.fillStyle = 'rgba(17,17,17, 1)';
+            ctx1.fillRect(this.x1,this.y1,2,2);
        
 
        }
@@ -299,16 +302,17 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
            //ctx1.fillStyle = 'rgba(255, 255, 255, 0.0)';
            //ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
            //ctx1.clearRect(0, 0, canvas.width, canvas.height);
-           this.direction();
+           //this.direction();
            self.draw();
            self.x1 += self.vx;
            self.y1 += self.vy;
-           //console.log(this.x1);
+           this.s=window.requestAnimationFrame(self.prepare.bind(this));
            if (Math.abs(this.x1-this.x2)<=this.radius && Math.abs(this.y1-this.y2)<=this.radius){
                //console.log(this.x1);
                count+=50;
                // console.log(count);
-               window.clearInterval(this.s);
+               //window.clearInterval(this.s);
+               window.cancelAnimationFrame(this.s);
                ctx1.clearRect(this.x1-this.radius*3, this.y1-this.radius*3, 6*this.radius, 6*this.radius);
            }
            //window.setInterval(this.animate.bind(this), 100)
@@ -317,10 +321,12 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
    migrant.prototype.animate=function(){
            migrant.instances.push(this);
            //console.log(migrant.instances.length);
-           this.s=window.setInterval(this.prepare.bind(this), 10);
+           //this.s=window.setInterval(this.prepare.bind(this), 10);
+           this.prepare();
    }
    migrant.prototype.clear=function(){
-       window.clearInterval(this.s);
+       //window.clearInterval(this.s);
+       window.cancelAnimationFrame(this.s);
    }
   a=new migrant(625.4273287806287,454.7406243701706,197.21573906014282,552.4553265207218)
   b=new migrant(610,440,236,412)
@@ -451,9 +457,20 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                      ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
                      //console.log(migrant_move.instances);
                 };
-                //console.log(migrant.instances.length);
+
+                if (migrant_move.instances.length>0){renderer()};
+
+                //console.log("s");
         })
   }
+
+  function renderer(){
+		ctx1.fillStyle = 'rgba(0, 105, 148, 0.05)';
+        ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
+		window.requestAnimationFrame(renderer);
+  }
+
+
   migrant_move.instances = [];
   function migrant_move(instance, number){
       var dudu = number;
@@ -486,7 +503,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
           //console.log(migrant_move.instances.length);
           //this.generate()
           //console.log(this.number);
-          this.send=window.setInterval(this.generate.bind(this), 2500);
+          this.send=window.setInterval(this.generate.bind(this), 1000);
       }
       this.clear=function(){
           window.clearInterval(this.send);
