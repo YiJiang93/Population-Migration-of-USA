@@ -18,7 +18,7 @@
           position: absolute;
           top: 50%;
           left: 70%;
-          color: white;
+          color: black;
           font-size: 40px;
         }
         .states {
@@ -41,7 +41,7 @@
     </style>
 </head>
 <body>
-<p id="count"></p>
+<p id="count" style="z-index: 4;"></p>
 <div>
 <canvas id="canvas" width="1200" height="700"
 style="position: absolute;left: 0;top:0;z-index: 0;"></canvas>
@@ -66,7 +66,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     var canvas_capital={};
     var names = [];
     var revNames = {};
-    var selected = "";
+    var selected = false;
     d3.tsv("https://lawdpls.github.io/idname.tsv", function(tsv){
     tsv.forEach(function(d,i){
       // names[d.name] = d.id;
@@ -145,8 +145,16 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             var size = Object.keys(canvas_capital).length;
             var elem = document.getElementById("canvas1");
             // console.log(canvas_capital);
-            d3.selectAll("path")
+            d3.selectAll("#count")
               .on("click", function(d){
+                selected = selected == false? true:false;
+              })
+            d3.selectAll("path")
+              .on("mouseover", function(d){
+
+              })
+              .on("click", function(d){
+                // selected = true;
                 flow(canvas_capital, revNames[d.id]);
                 var projection2 = d3.geoAlbersUsa()
                 .scale(400)
@@ -188,86 +196,86 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             })
             })
               })
-            elem.addEventListener('click', function(event) {
-    			    var x = event.pageX,
-       	 		      y = event.pageY,
-       	 		      dots = document.getElementById("canvas");
-    			    for (var i = 0; i < size; i++) {
-    				    ctx1.clearRect(0, 0, canvas1.width, canvas.height);
-    				    if ((Math.abs(canvas_capital[nodes[i].state][0] - x) < 5) && (Math.abs(canvas_capital[nodes[i].state][1] - y) < 5)) {
-                  selected = nodes[i].state;
-                  // console.log(names);
-                  graph.selectAll("path")
-                      .style("fill", function(d){
-                      // console.log(d)
-                      for (var i = 0; i < names.length; i++) {
-                        if (names[i].name == selected && d.id == names[i].id) {
-                          return "red";
-                        }
-                      }
-                    })
-                  flow(canvas_capital, nodes[i].state);
-    				    }
-    			    }
+//             elem.addEventListener('click', function(event) {
+//     			    var x = event.pageX,
+//        	 		      y = event.pageY,
+//        	 		      dots = document.getElementById("canvas");
+//     			    for (var i = 0; i < size; i++) {
+//     				    ctx1.clearRect(0, 0, canvas1.width, canvas.height);
+//     				    if ((Math.abs(canvas_capital[nodes[i].state][0] - x) < 5) && (Math.abs(canvas_capital[nodes[i].state][1] - y) < 5)) {
+//                   selected = nodes[i].state;
+//                   // console.log(names);
+//                   graph.selectAll("path")
+//                       .style("fill", function(d){
+//                       // console.log(d)
+//                       for (var i = 0; i < names.length; i++) {
+//                         if (names[i].name == selected && d.id == names[i].id) {
+//                           return "red";
+//                         }
+//                       }
+//                     })
+//                   flow(canvas_capital, nodes[i].state);
+//     				    }
+//     			    }
 
-              var projection2 = d3.geoAlbersUsa()
-                .scale(400)
-                .translate([150, 100]);
-                d3.select(".minimap")
-                .remove();
-        if(selected != "") {
-              var path2 = d3.geoPath()
-                .projection(projection2);
-            d3.csv("https://lawdpls.github.io/05/migration.csv", function(error, mig){
-              d3.json("https://lawdpls.github.io/05/us.json", function(unitedState) {
-              var data2 = topojson.feature(unitedState, unitedState.objects.states).features;
-              // d3.tsv("https://lawdpls.github.io/idname.tsv", function(tsv){
-              // var names = {};
-              // tsv.forEach(function(d,i){
-              //     names[d.id] = d.name;
-              // });
+//               var projection2 = d3.geoAlbersUsa()
+//                 .scale(400)
+//                 .translate([150, 100]);
+//                 d3.select(".minimap")
+//                 .remove();
+//         if(selected != "") {
+//               var path2 = d3.geoPath()
+//                 .projection(projection2);
+//             d3.csv("https://lawdpls.github.io/05/migration.csv", function(error, mig){
+//               d3.json("https://lawdpls.github.io/05/us.json", function(unitedState) {
+//               var data2 = topojson.feature(unitedState, unitedState.objects.states).features;
+//               // d3.tsv("https://lawdpls.github.io/idname.tsv", function(tsv){
+//               // var names = {};
+//               // tsv.forEach(function(d,i){
+//               //     names[d.id] = d.name;
+//               // });
               
-              var id;
-              for (var j = 0; j < data2.length; j++) {
-                for (var i = 0; i < names.length; i++) {
-                  if (data2[j].id == names[i].id && names[i].name == selected) {
-                    id = data2[j].id;
-                    break;
-                  }
-                }
-              }
-              console.log(id)
-              var graph2 = d3.select("#secondary")
-                        .append("g")
-                        .attr("class", "minimap")
-                        .selectAll("path")
-                        .data(data2)
-                        .enter()
-                        .append("path")
-                        .attr("d", path2)
-                        .style("fill", function(d){
-                          if (d.id == id) {
-                            return "red";
-                          }
-                        })
-                        .style("opacity", function(d,i){
-                          // console.log(revNames[d.id])
-                          // console.log(mig[id][selected])
-                            if (d.id != id) {
-                              if (mig[id][revNames[d.id]] < 100) {
-                                return 0.1
-                              } else if (mig[id][revNames[d.id]] < 500) {
-                                return 0.4
-                              } else if (mig[id][revNames[d.id]] < 1000) {
-                                return 0.7
-                              }
-                            }
-                        })
-                        .attr("stroke", "white");
-        });
-});
-          }
-    		    }, false);
+//               var id;
+//               for (var j = 0; j < data2.length; j++) {
+//                 for (var i = 0; i < names.length; i++) {
+//                   if (data2[j].id == names[i].id && names[i].name == selected) {
+//                     id = data2[j].id;
+//                     break;
+//                   }
+//                 }
+//               }
+//               console.log(id)
+//               var graph2 = d3.select("#secondary")
+//                         .append("g")
+//                         .attr("class", "minimap")
+//                         .selectAll("path")
+//                         .data(data2)
+//                         .enter()
+//                         .append("path")
+//                         .attr("d", path2)
+//                         .style("fill", function(d){
+//                           if (d.id == id) {
+//                             return "red";
+//                           }
+//                         })
+//                         .style("opacity", function(d,i){
+//                           // console.log(revNames[d.id])
+//                           // console.log(mig[id][selected])
+//                             if (d.id != id) {
+//                               if (mig[id][revNames[d.id]] < 100) {
+//                                 return 0.1
+//                               } else if (mig[id][revNames[d.id]] < 500) {
+//                                 return 0.4
+//                               } else if (mig[id][revNames[d.id]] < 1000) {
+//                                 return 0.7
+//                               }
+//                             }
+//                         })
+//                         .attr("stroke", "white");
+//         });
+// });
+//           }
+//     		    }, false);
         }
     });
     });
@@ -299,9 +307,13 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             ctx1.closePath();
             ctx1.fillStyle = this.color;
             ctx1.fill();*/
+          console.log(selected)
+          if (selected == false) {
             ctx1.fillStyle = 'rgba(17,17,17, 1)';
+          } else {
+            ctx1.fillStyle = 'rgba(17,17,17, 0)';
+          }
             ctx1.fillRect(this.x1,this.y1,2,2);
-       
 
        }
        if (this.x1<this.x2){
@@ -531,7 +543,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
       this.number=number
       this.generate=function(){
           if (this.number>0) {
-              migrants=new migrant(this.migrant.x1, this.migrant.y1, this.migrant.x2, this.migrant.y2)
+              migrants=new migrant(this.migrant.x1+Math.random()*(10-(-10)), this.migrant.y1+Math.random()*(10-(-10)), this.migrant.x2, this.migrant.y2)
               migrants.animate()
               this.number-=50
               //console.log(this.number)
@@ -554,8 +566,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
           }*/
           //console.log(migrant_move.instances.length);
           //this.generate()
-          //console.log(this.number);
-          this.send=window.setInterval(this.generate.bind(this), 1000);
+          this.send=window.setInterval(this.generate.bind(this), 2000000/dudu);
       }
       this.clear=function(){
           window.clearInterval(this.send);
