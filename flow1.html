@@ -67,6 +67,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     var names = [];
     var revNames = {};
     var selected = "";
+    var canvasOffset = 10;
     d3.tsv("https://lawdpls.github.io/idname.tsv", function(tsv){
     tsv.forEach(function(d,i){
       // names[d.name] = d.id;
@@ -138,7 +139,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                 ctx.beginPath();
                 ctx.arc(state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90, 5, 0, Math.PI * 2, true);
                 ctx.closePath();
-                ctx.fillStyle = "#98fb98";
+                ctx.fillStyle = "white";
                 ctx.fill();
                 //console.log([state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90])
             }
@@ -555,7 +556,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
       this.number=number
       this.generate=function(){
           if (this.number>0) {
-              migrants=new migrant(this.migrant.x1+Math.random()*(10-(-10)), this.migrant.y1+Math.random()*(10-(-10)), this.migrant.x2, this.migrant.y2, this.migrant.startState)
+              migrants=new migrant(this.migrant.x1-canvasOffset+Math.random()*(10-(-10)), this.migrant.y1-canvasOffset+Math.random()*(10-(-10)), this.migrant.x2-canvasOffset, this.migrant.y2-canvasOffset, this.migrant.startState)
               migrants.animate()
               this.number-=50
               //console.log(this.number)
