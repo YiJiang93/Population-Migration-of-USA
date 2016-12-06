@@ -66,7 +66,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     var canvas_capital={};
     var names = [];
     var revNames = {};
-    var selected = false;
+    var selected = "";
     d3.tsv("https://lawdpls.github.io/idname.tsv", function(tsv){
     tsv.forEach(function(d,i){
       // names[d.name] = d.id;
@@ -151,7 +151,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
               })
             d3.selectAll("path")
               .on("mouseover", function(d){
-
+                selected = d.id;
+              })
+              .on("mouseout", function(d){
+                selected = "";
               })
               .on("click", function(d){
                 // selected = true;
@@ -181,14 +184,16 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                         })
                         .style("opacity", function(o,i){
                           // console.log(revNames[d.id])
-                          // console.log(mig[id][selected])
+                          console.log(mig[d.id]["Florida"])
                             if (o.id != d.id) {
                               if (mig[d.id][revNames[o.id]] < 100) {
                                 return 0.1
                               } else if (mig[d.id][revNames[o.id]] < 500) {
-                                return 0.4
+                                return 0.3
                               } else if (mig[d.id][revNames[o.id]] < 1000) {
-                                return 0.7
+                                return 0.6
+                              } else if (mig[d.id][revNames[o.id]] < 10000) {
+                                return 0.8
                               }
                             }
                         })
@@ -280,16 +285,16 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     });
     });
    migrant.instances = [];
-   function migrant(x1,y1,x2,y2){
-       this.x1=x1;
-       this.x2=x2;
-       this.y1=y1;
-       this.y2=y2;
-       this.vx=(this.x2-this.x1)/((this.x1-this.x2)**2+(this.y1-this.y2)**2)**0.5;
-       this.vy=(this.y2-this.y1)/((this.x1-this.x2)**2+(this.y1-this.y2)**2)**0.5;
-       this.radius=1;
-       this.color="white";
-       this.draw=function(){
+   function migrant(x1,y1,x2,y2,startState){
+     this.x1=x1;
+     this.x2=x2;
+     this.y1=y1;
+     this.y2=y2;
+     this.startState=startState;    this.vx=(x2-x1)/((x1-x2)**2+(y1-y2)**2)**0.5;
+     this.vy=(y2-y1)/((x1-x2)**2+(y1-y2)**2)**0.5;
+     this.radius=1;
+     this.color="black";
+     this.draw=function(){
 
             // var img=new Image();
             // var x=this.x1;
@@ -307,8 +312,15 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             ctx1.closePath();
             ctx1.fillStyle = this.color;
             ctx1.fill();*/
-          console.log(selected)
-          if (selected == false) {
+          var temp;
+          for (var i = 0; i < names.length; i++){
+            if (names[i].name == this.startState) {
+              temp = names[i].id;
+              break;
+            }
+          }
+          console.log(this.startState)
+          if (selected == "" || selected == temp) {
             ctx1.fillStyle = 'rgba(17,17,17, 1)';
           } else {
             ctx1.fillStyle = 'rgba(17,17,17, 0)';
@@ -436,18 +448,17 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
            }
   //console.log(Object.values(states["Alabama"]))
   function stateToMigrant(state){
-      end_coord=capital[state];
-      starts=states[state];
-      migrants=Object.keys(starts).map(function(key){
-                                            start_coord=capital[key]
-                                            instance=new migrant(start_coord[0], start_coord[1], end_coord[0], end_coord[1])
-                                            pair=new migrant_move(instance, parseInt(starts[key]))
-                                            return pair})
-      //console.log(Object.keys(starts))
-      //console.log(stateMap);
-      //return stateMap
-      return migrants
-  }
+                     end_coord=capital[state];
+                     starts=states[state];
+                     migrants=Object.keys(starts).map(function(key){
+                                                           start_coord=capital[key]
+                                                           instance=new migrant(start_coord[0], start_coord[1], end_coord[0], end_coord[1], key)
+                                                           pair=new migrant_move(instance, starts[key])
+                                                           return pair})
+                     //console.log(Object.keys(starts))
+                     //console.log(capital);
+                     return migrants
+               }
   function interMove(states, state){ // states is an object that contains all interstate migrant flow
       //stateMigrants=Object.keys(states).map(stateToMigrant)
       //stateInfo=new Object();
@@ -529,7 +540,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
   }
 
   function renderer(){
-		ctx1.fillStyle = 'rgba(255, 255, 255, 0.05)';
+		ctx1.fillStyle = 'rgba(255, 255, 255, 0.1)';
         ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
 		window.requestAnimationFrame(renderer);
   }
@@ -543,7 +554,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
       this.number=number
       this.generate=function(){
           if (this.number>0) {
-              migrants=new migrant(this.migrant.x1+Math.random()*(10-(-10)), this.migrant.y1+Math.random()*(10-(-10)), this.migrant.x2, this.migrant.y2)
+              migrants=new migrant(this.migrant.x1+Math.random()*(10-(-10)), this.migrant.y1+Math.random()*(10-(-10)), this.migrant.x2, this.migrant.y2, this.migrant.startState)
               migrants.animate()
               this.number-=50
               //console.log(this.number)
@@ -566,7 +577,9 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
           }*/
           //console.log(migrant_move.instances.length);
           //this.generate()
-          this.send=window.setInterval(this.generate.bind(this), 2000000/dudu);
+          if (dudu != 0) {
+            this.send=window.setInterval(this.generate.bind(this), 2000000/dudu);
+          }
       }
       this.clear=function(){
           window.clearInterval(this.send);
