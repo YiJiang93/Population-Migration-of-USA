@@ -6,31 +6,31 @@
     <script src="https://d3js.org/topojson.v1.min.js"></script>
 
     <style>
-        path:hover {
+        #main path:hover {
           fill:pink;
           fill-opacity:0.7;
         }
         body {
-          /*background: #006994;*/
-          background: white;
+          background: #000020;
+          /*background: white;*/
         }
         #count {
           position: absolute;
-          top: 50%;
+          top: 35%;
           left: 70%;
-          color: black;
+          color: white;
           font-size: 40px;
         }
         .states {
             /*fill: #000030;*/
             fill-opacity: 0; 
             /*stroke: #ADD8E6;*/
-            stroke: gray;
+            stroke: white;
             stroke-linejoin: round;
         }
         #secondary {
           position: absolute;
-          top: 20%;
+          top: 8%;
           left: 68%;
         }
         .minimap {
@@ -67,6 +67,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     var names = [];
     var revNames = {};
     var selected = "";
+    var target = "";
     var canvasOffset = 10;
     d3.tsv("https://lawdpls.github.io/idname.tsv", function(tsv){
     tsv.forEach(function(d,i){
@@ -133,14 +134,14 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                     .attr("transform", function(d) {
                         return "translate(" + projection([d.longitude-0.5, d.latitude+0.5]) + ")";})
                     .attr("font-size", "11px")
-                    .attr("fill","black");
+                    .attr("fill","white");
             for (var i = 0; i < nodes.length; i++) {
                 canvas_capital[nodes[i].state] = [state_capital[nodes[i].state][0] - 20, state_capital[nodes[i].state][1] + 90]
-                ctx.beginPath();
-                ctx.arc(state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90, 5, 0, Math.PI * 2, true);
-                ctx.closePath();
-                ctx.fillStyle = "white";
-                ctx.fill();
+                // ctx.beginPath();
+                // ctx.arc(state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90, 5, 0, Math.PI * 2, true);
+                // ctx.closePath();
+                // ctx.fillStyle = "white";
+                // ctx.fill();
                 //console.log([state_capital[nodes[i].state][0]-20, state_capital[nodes[i].state][1]+90])
             }
             var size = Object.keys(canvas_capital).length;
@@ -152,13 +153,15 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
               })
             d3.selectAll("path")
               .on("mouseover", function(d){
-                selected = d.id;
+                if (d.id != target) {
+                  selected = d.id;
+                }
               })
               .on("mouseout", function(d){
                 selected = "";
               })
               .on("click", function(d){
-                // selected = true;
+                target = d.id;
                 flow(canvas_capital, revNames[d.id]);
                 var projection2 = d3.geoAlbersUsa()
                 .scale(400)
@@ -321,11 +324,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
               break;
             }
           }
-          console.log(this.startState)
           if (selected == "" || selected == temp) {
-            ctx1.fillStyle = 'rgba(17,17,17, 1)';
+            ctx1.fillStyle = 'rgba(255,255,255, 1)';
           } else {
-            ctx1.fillStyle = 'rgba(17,17,17, 0)';
+            ctx1.fillStyle = 'rgba(255,255,255, 0)';
           }
             ctx1.fillRect(this.x1,this.y1,2,2);
 
@@ -542,7 +544,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
   }
 
   function renderer(){
-		ctx1.fillStyle = 'rgba(255, 255, 255, 0.1)';
+		ctx1.fillStyle = 'rgba(0, 0, 32, 0.1)';
         ctx1.fillRect(0, 0, canvas1.width, canvas1.height);
 		window.requestAnimationFrame(renderer);
   }
@@ -641,7 +643,10 @@ function myTimer() {
     document.getElementById("count").innerHTML = count;
   } 
 }
-  //if (balls.length>0) {window.setInterval(draw1, 500)};
+
+</script>
+</body>
+
 </script>
 
 </body>
