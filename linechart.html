@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Line chart</title>
-    <script src="https://d3js.org/d3.v3.js"></script>
+    <script src="https://d3js.org/d3.v4.js"></script>
 </head>
 <body>
 <style> /* set the CSS */
 
-body { font: 12px Arial;}
+body { 
+  font: 12px Arial;}
 
-path {
-    stroke: steelblue;
+.line {
+    /*stroke: steelblue;*/
     stroke-width: 2;
     fill: none;
 }
@@ -26,92 +27,95 @@ path {
 
 </style>
 <script>
-    var margin = {top: 30, right: 20, bottom: 30, left: 50},
-        width = 650 - margin.left - margin.right,
-        height = 270 - margin.top - margin.bottom;
+    var linemargin = {top: 30, right: 20, bottom: 30, left: 50},
+        linewidth = 650 - linemargin.left - linemargin.right,
+        lineheight = 270 - linemargin.top - linemargin.bottom;
 
-    var svg = d3.select("body")
+    var gg = d3.select("body")
     .append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
+        .attr("width", linewidth + linemargin.left + linemargin.right)
+        .attr("height", lineheight + linemargin.top + linemargin.bottom)
     .append("g")
         .attr("transform",
-              "translate(" + margin.left + "," + margin.top + ")");
+              "translate(" + linemargin.left + "," + linemargin.top + ")");
 
 
-    var x = d3.time.scale().range([0, width]),
-        y = d3.scale.linear().range([height, 0]);
-    var parseDate = d3.time.format("%Y").parse;
+    var x = d3.scaleTime().range([0, linewidth]),
+        y = d3.scaleLinear().range([lineheight, 0]);
+    var parseDate = d3.timeParse("%Y");
+    var xAxis = d3.axisBottom(x);
+    var yAxis = d3.axisLeft(y);
+    var name = "Florida";
 
-
-    var xAxis = d3.svg.axis()
-            .scale(x)
-            .orient("bottom");
-
-    var yAxis = d3.svg.axis()
-            .scale(y)
-            .orient("left");
-
-
-    var line=d3.svg.line()
-            .x(function(d) { console.log(d.Year); return x(d.Year); })
-            .y(function(d) { return y(d.Alaska); });;
-
-
-    d3.csv("sum.csv",function(error,data){
+    d3.csv("https://lawdpls.github.io/05/sum.csv",function(error,linedata){
         if (error) throw error;
-        data.forEach(function(d){
+        linedata.forEach(function(d){
+          for (var prop in d){
+            if (prop != "Flow") {
+              d[prop] = +d[prop];
+            }
+          }
             d.Year= parseDate(d.Year);
-            d.Alaska=+d.Alaska;
         })
+        
+    	var line=d3.line()
+            .x(function(d) { 
+              return x(d.Year); 
+            })
+            .y(function(d) {
+              for (var prop in d) {
+                if (prop == name){
+                  return y(d[prop]);
+                }
+              } 
+            });        
 
-
-
-        x.domain(d3.extent(data, function(d) { return d.Year; }));
-        y.domain([0, d3.max(data, function(d) { return d.Alaska; })]);
+        x.domain(d3.extent(linedata, function(d) { 
+          return d.Year; 
+        }));
+        y.domain([0, d3.max(linedata, function(d) { 
+          for (var prop in d) {
+                if (prop == name){
+                  return d[prop];
+                }
+              }  
+        })]);
 
         var datanest=d3.nest()
                 .key(function(d){
                     return d.Flow;
                 })
-                .entries(data);
+                .entries(linedata);
 
 
         datanest.forEach(function(d,i){
             if(i==0){
-                svg.append("path")
+                gg.append("path")
                     .attr("class","line")
                     .style("stroke","red")
                     .attr("d",line(d.values));
-
             }else{
-                svg.append("path")
+                gg.append("path")
                     .attr("class","line")
+                    .style("stroke","steelblue")
                     .attr("d",line(d.values));
             }
-
-
         });
-       var legend=svg.append('g')
+       var legend=gg.append('g')
          .attr("class", "legend")
          .selectAll('rect')
          .data(['Inflow', 'Outflow'])
          .enter()
-
-
-           // draw legend colored rectangles
         legend.append("rect")
               .attr("y",function(d,i){
-                  return width/35-i*10
+                  return linewidth/35-i*10
               })
               .attr("x", 540)
               .attr("width", 10)
               .attr("height", 7)
               .style("fill", function(d, i){return ["steelblue", 'red'][i]});
-
-       // draw legend text
           legend.append("text")
-              .attr("y", function(d, i){return width/25-i*10})
+              .attr("y", function(d, i){return linewidth/25-i*10})
               .attr("x", 560)
               .text(function(d,i) {
                   if(i==0){
@@ -120,20 +124,13 @@ path {
                       return "outflow"
                   }
                   });
-
-        svg.append("g")
+        gg.append("g")
                 .attr("class", "x axis")
-                .attr("transform", "translate(0," + height + ")")
+                .attr("transform", "translate(0," + lineheight + ")")
                 .call(xAxis);
-        svg.append("g")
+        gg.append("g")
             .attr("class", "y axis")
             .call(yAxis);
-
-
-
-
-
-
     })
 
 
