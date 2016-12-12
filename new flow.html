@@ -17,7 +17,7 @@
         }
         #count {
           position: absolute;
-          top: 35%;
+          top: 40%;
           left: 70%;
           color: white;
           font-size: 40px;
@@ -41,8 +41,8 @@
         }
         #bar {
           position: absolute;
-          top: 80%;
-          left: 10%;
+          top: 60%;
+          left: 55%;
           background: #000020;
           z-index: 5;
           color:white;
@@ -102,7 +102,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     var year = "05";
 
     var linemargin = {top: 30, right: 20, bottom: 30, left: 50},
-    linewidth = 1000 - linemargin.left - linemargin.right,
+    linewidth = 550 - linemargin.left - linemargin.right,
     lineheight = 190 - linemargin.top - linemargin.bottom;
 
     d3.tsv("https://lawdpls.github.io/idname.tsv", function(tsv){
@@ -142,10 +142,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       .append('rect')
                       .attr('class','yearz')
                       .attr('id','bar05')
-                      .attr('x', 51)
+                      .attr('x', 50)
                       .attr('y', 20)
                       .attr('height', 140)
-                      .attr('width', 40)
+                      .attr('width', 25)
                       .on('mouseover', function(d){
                         var temp = d3.select(this);
                         temp.style('opacity', 0.6);
@@ -162,10 +162,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       .append('rect')
                       .attr('class','yearz')
                       .attr('id','bar06')
-                      .attr('x', 125)
+                      .attr('x', 85)
                       .attr('y', 20)
                       .attr('height', 140)
-                      .attr('width', 40)
+                      .attr('width', 30)
                       .on('mouseover', function(d){
                         var temp = d3.select(this);
                         temp.style('opacity', 0.6);
@@ -182,10 +182,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       .append('rect')
                       .attr('class','yearz')
                       .attr('id','bar07')
-                      .attr('x', 215)
+                      .attr('x', 131)
                       .attr('y', 20)
                       .attr('height', 140)
-                      .attr('width', 40)
+                      .attr('width', 30)
                       .on('mouseover', function(d){
                         var temp = d3.select(this);
                         temp.style('opacity', 0.6);
@@ -202,10 +202,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       .append('rect')
                       .attr('class','yearz')
                       .attr('id','bar08')
-                      .attr('x', 310)
+                      .attr('x', 180)
                       .attr('y', 20)
                       .attr('height', 140)
-                      .attr('width', 40)
+                      .attr('width', 30)
                       .on('mouseover', function(d){
                         var temp = d3.select(this);
                         temp.style('opacity', 0.6);
@@ -222,10 +222,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       .append('rect')
                       .attr('class','yearz')
                       .attr('id','bar09')
-                      .attr('x', 400)
+                      .attr('x', 227)
                       .attr('y', 20)
                       .attr('height', 140)
-                      .attr('width', 40)
+                      .attr('width', 30)
                       .on('mouseover', function(d){
                         var temp = d3.select(this);
                         temp.style('opacity', 0.6);
@@ -242,10 +242,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       .append('rect')
                       .attr('class','yearz')
                       .attr('id','bar10')
-                      .attr('x', 495)
+                      .attr('x', 275)
                       .attr('y', 20)
                       .attr('height', 140)
-                      .attr('width', 40)
+                      .attr('width', 30)
                       .on('mouseover', function(d){
                         var temp = d3.select(this);
                         temp.style('opacity', 0.6);
@@ -262,10 +262,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       .append('rect')
                       .attr('class','yearz')
                       .attr('id','bar11')
-                      .attr('x', 590)
+                      .attr('x', 325)
                       .attr('y', 20)
                       .attr('height', 140)
-                      .attr('width', 40)
+                      .attr('width', 30)
                       .on('mouseover', function(d){
                         var temp = d3.select(this);
                         temp.style('opacity', 0.6);
@@ -282,10 +282,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       .append('rect')
                       .attr('class','yearz')
                       .attr('id','bar12')
-                      .attr('x', 680)
+                      .attr('x', 372)
                       .attr('y', 20)
                       .attr('height', 140)
-                      .attr('width', 40)
+                      .attr('width', 30)
                       .on('mouseover', function(d){
                         var temp = d3.select(this);
                         temp.style('opacity', 0.6);
@@ -302,10 +302,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       .append('rect')
                       .attr('class','yearz')
                       .attr('id','bar13')
-                      .attr('x', 775)
+                      .attr('x', 420)
                       .attr('y', 20)
                       .attr('height', 140)
-                      .attr('width', 40)
+                      .attr('width', 30)
                       .on('mouseover', function(d){
                         var temp = d3.select(this);
                         temp.style('opacity', 0.6);
@@ -322,10 +322,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       .append('rect')
                       .attr('class','yearz')
                       .attr('id','bar14')
-                      .attr('x', 865)
+                      .attr('x', 465)
                       .attr('y', 20)
                       .attr('height', 140)
-                      .attr('width', 40)
+                      .attr('width', 30)
                       .on('mouseover', function(d){
                         var temp = d3.select(this);
                         temp.style('opacity', 0.6);
@@ -342,10 +342,10 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                       .append('rect')
                       .attr('class','yearz')
                       .attr('id','bar15')
-                      .attr('x', 950)
+                      .attr('x', 520)
                       .attr('y', 20)
                       .attr('height', 140)
-                      .attr('width', 40)
+                      .attr('width', 20)
                       .on('mouseover', function(d){
                         var temp = d3.select(this);
                         temp.style('opacity', 0.6);
@@ -455,13 +455,13 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
               .attr("y",function(d,i){
                   return linewidth/35-i*10
               })
-              .attr("x", 970)
+              .attr("x", 500)
               .attr("width", 10)
               .attr("height", 7)
               .style("fill", function(d, i){return ["steelblue", 'red'][i]});
           legend.append("text")
               .attr("y", function(d, i){return linewidth/27-i*10})
-              .attr("x", 990)
+              .attr("x", 530)
               .style("fill","white")
               .text(function(d,i) {
                   if(i==0){
