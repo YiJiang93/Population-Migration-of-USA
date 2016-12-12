@@ -862,9 +862,13 @@ function mini() {
   migrant_move.instances = [];
   function migrant_move(instance, number){
       var dudu = number;
-      // console.log(4000000/dudu)
+      // console.log(dudu)
       this.migrant=instance
-      this.number=number
+      this.number=+number
+      // console.log(this.number)
+      if (this.number == 0) {
+        massflag.push("1");
+      }
       this.generate=function(){
           if (this.number>0) {
               migrants=new migrant(this.migrant.x1-canvasOffset+Math.random()*(5-(-10)), this.migrant.y1-yOffset-canvasOffset+Math.random()*(5-(-10)), this.migrant.x2-canvasOffset, this.migrant.y2-yOffset-canvasOffset, this.migrant.startState)
@@ -880,7 +884,6 @@ function mini() {
           else {
               massflag.push("1");
               window.clearInterval(this.send);
-              // console.log(dudu);
           }
       }
       this.move=function(){
