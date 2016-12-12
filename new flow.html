@@ -42,7 +42,7 @@
         #bar {
           position: absolute;
           top: 60%;
-          left: 55%;
+          left: 60%;
           background: #000020;
           z-index: 5;
           color:white;
@@ -82,7 +82,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
 <svg id="main" style="position: absolute; left: 0; top: 0; z-index: 2;"></svg>
 </div>
 <svg id="secondary" width="300" height="200" style="z-index: 3;"></svg>
-<svg id="bar" width="1200" height="200"></svg>
+<svg id="bar" width="600" height="200"></svg>
 
 <script>
     var canvas = document.getElementById('canvas');
@@ -99,7 +99,9 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
     var selected = "";
     var target = "";
     var canvasOffset = 10;
+    var yOffset = 60;
     var year = "05";
+    var clicked = false;
 
     var linemargin = {top: 30, right: 20, bottom: 30, left: 50},
     linewidth = 550 - linemargin.left - linemargin.right,
@@ -363,6 +365,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             .style('opacity', 0);
           bar05.style('opacity', 0.6);
           year="05";
+          click=true;
           flow(canvas_capital, revNames[target]);
           mini();
         })
@@ -371,6 +374,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             .style('opacity', 0);
           bar06.style('opacity', 0.6);
           year="06";
+          click=true;
           flow(canvas_capital, revNames[target]);
           mini();
         })
@@ -379,6 +383,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             .style('opacity', 0);
           bar07.style('opacity', 0.6);
           year="07";
+          click=true;
           flow(canvas_capital, revNames[target]);
           mini();
         })
@@ -387,6 +392,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             .style('opacity', 0);
           bar08.style('opacity', 0.6);
           year="08";
+          click=true;
           flow(canvas_capital, revNames[target]);
           mini();
         })
@@ -395,6 +401,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             .style('opacity', 0);
           bar09.style('opacity', 0.6);
           year="09";
+          click=true;
           flow(canvas_capital, revNames[target]);
           mini();
         })
@@ -403,6 +410,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             .style('opacity', 0);
           bar10.style('opacity', 0.6);
           year="10";
+          click=true;
           flow(canvas_capital, revNames[target]);
           mini();
         })
@@ -411,6 +419,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             .style('opacity', 0);
           bar11.style('opacity', 0.6);
           year="11";
+          click=true;
           flow(canvas_capital, revNames[target]);
           mini();
         })
@@ -419,6 +428,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             .style('opacity', 0);
           bar12.style('opacity', 0.6);
           year="12";
+          click=true;
           flow(canvas_capital, revNames[target]);
           mini();
         })
@@ -427,6 +437,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             .style('opacity', 0);
           bar13.style('opacity', 0.6);
           year="13";
+          click=true;
           flow(canvas_capital, revNames[target]);
           mini();
         })
@@ -435,6 +446,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             .style('opacity', 0);
           bar14.style('opacity', 0.6);
           year="14";
+          click=true;
           flow(canvas_capital, revNames[target]);
           mini();
         })
@@ -443,6 +455,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
             .style('opacity', 0);
           bar15.style('opacity', 0.6);
           year="15";
+          click=true;
           flow(canvas_capital, revNames[target]);
           mini();
         })
@@ -461,13 +474,13 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
               .style("fill", function(d, i){return ["steelblue", 'red'][i]});
           legend.append("text")
               .attr("y", function(d, i){return linewidth/27-i*10})
-              .attr("x", 530)
+              .attr("x", 515)
               .style("fill","white")
               .text(function(d,i) {
                   if(i==0){
-                      return "inflow"
+                      return "In"
                   }else{
-                      return "outflow"
+                      return "Out"
                   }
                   });
         gg.append("g")
@@ -479,7 +492,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                         .attr("width", width)
                         .attr("height", height)
                         .append("g")
-                        .attr("transform", "translate(-30, 80)");
+                        .attr("transform", "translate(-30, 20)");
         var projection = d3.geoAlbersUsa()
                 .scale(1100);
         var path = d3.geoPath()
@@ -503,7 +516,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                         return d.code;
                     })
                     .style("fill", "gray")
-                    .style("opacity", 0.5)
+                    .style("opacity", 0)
                     .attr("r", 2)
                     .attr("transform", function(d) {
                         state_capital[d.state] = projection([d.longitude, d.latitude])
@@ -516,7 +529,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                         return d.code
                     })
                     .attr("transform", function(d) {
-                        return "translate(" + projection([d.longitude-0.5, d.latitude+0.5]) + ")";})
+                        return "translate(" + projection([d.longitude-0.5, d.latitude]) + ")";})
                     .attr("font-size", "11px")
                     .attr("fill","white");
             for (var i = 0; i < nodes.length; i++) {
@@ -542,6 +555,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
                   .remove();
                 d3.selectAll(".yaxis")
                   .remove();
+                  click=true;
                 target = d.id;
 
       var line=d3.line()
@@ -945,7 +959,7 @@ function mini() {
       this.number=number
       this.generate=function(){
           if (this.number>0) {
-              migrants=new migrant(this.migrant.x1-canvasOffset+Math.random()*(10-(-10)), this.migrant.y1-canvasOffset+Math.random()*(10-(-10)), this.migrant.x2-canvasOffset, this.migrant.y2-canvasOffset, this.migrant.startState)
+              migrants=new migrant(this.migrant.x1-canvasOffset+Math.random()*(10-(-10)), this.migrant.y1-yOffset-canvasOffset+Math.random()*(10-(-10)), this.migrant.x2-canvasOffset, this.migrant.y2-yOffset-canvasOffset, this.migrant.startState)
               migrants.animate()
               this.number-=50
               //console.log(this.number)
@@ -1080,7 +1094,11 @@ function autoAdvance(){
     mini();
 }
 
-var playTimer = setInterval(function(){autoAdvance()}, 50000);
+var playTimer = setInterval(function(){
+  if (click == true){
+    autoAdvance()
+  }
+}, 50000);
 
 </script>
 
