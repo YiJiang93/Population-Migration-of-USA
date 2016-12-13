@@ -81,6 +81,12 @@
           right: 5%;
           z-index: 7;
         }
+        h3 {
+          color: white;
+          position: absolute;
+          bottom: 0;
+          z-index: 7;
+        }
     </style>
 </head>
 <body>
@@ -92,12 +98,57 @@ style="position: absolute;left: 0;top:0;z-index: 0;"></canvas>
 <canvas id="canvas1" width="1200" height="700"
 style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
 
-<svg id="main" style="position: absolute; left: 0; top: 0; z-index: 2;"></svg>
+<svg id="main" style="position: absolute; left: 0; top: 0; z-index: 2;">
+    <text x="20" y="950" font-family="sans-serif" font-size="20px" fill="white">
+        An interactive flowing visualization by Shijian Li&Zheng Nie&Yi Jiang
+    </text>
+
+    <text x="20" y="1000" font-family="sans-serif" font-size="20px" fill="white">
+        Summary
+    </text>
+    <text x="20" y="1030" font-family="sans-serif" font-size="16px" fill="white">
+        The line chart on the lower right immediately shows the migration trend of a state over ten years from 2005 to 2015 after an easy click on a state.
+    </text>
+    <text x="20" y="1050" font-family="sans-serif" font-size="16px" fill="white">
+    After a click on a state, you can hover over a state you are interested in. Then the magnitude of migration can be seen from the number of migrants.
+    </text>
+    <text x="20" y="1070" font-family="sans-serif" font-size="16px" fill="white">
+        Besides, we add a heatmap to better show the magnitude of a state of interest to all other states across whole country.
+    </text>
+    <text x="20" y="1090" font-family="sans-serif" font-size="16px" fill="white">
+    The number of migrants into a state or leave a state can be obtained by mouseover to the corresponding states.
+    </text>
+    <text x="20" y="1120" font-family="sans-serif" font-size="20px" fill="white">
+    Credits
+    </text>
+    <text x="20" y="1140" font-family="sans-serif" font-size="16px" fill="white">
+    This project was created by Shijian Li, Zheng Nie and Yi Jiang for a graduate course in Data Visualization at WPI taught by Lane Harrison.
+    </text>
+    <text x="20" y="1160" font-family="sans-serif" font-size="16px" fill="white">
+    Several open-source projects were used like D3.js,HTML,Canvas element
+    </text>
+    <text x="20" y="1180" font-family="sans-serif" font-size="16px" fill="white">
+    Much of the inspiration for this report comes from:<a href=http://www.lucify.com/the-flow-towards-europe>Lucify.com</a>
+    </text>
+    <text x="20" y="1200" font-family="sans-serif" font-size="16px" fill="white">
+    Data Source:<a href="http://www.census.gov/data/tables/time-series/demo/geographic-mobility/state-to-state-migration.html">Census of Governments</a>
+    </text>
+    <text x="20" y="1230" font-family="sans-serif" font-size="20px" fill="white">
+        Source Code
+    </text>
+    <text x="20" y="1250" font-family="sans-serif" font-size="16px" fill="white">
+    The source code and raw data are available on github:<a href="https://github.com/YiJiang93/Population-Migration-of-USA">On Github</a>
+    </text>
+</svg>
 </div>
+
+
 <svg id="secondary" width="300" height="200" style="z-index: 3;"></svg>
 <svg id="bar" width="600" height="200"></svg>
 <h1>Domestic Migration of The US, 2005-2015</h1>
 <h2 id="auto"></h2>
+
+
 
 <script>
     var canvas = document.getElementById('canvas');
@@ -529,7 +580,7 @@ style="position: absolute;left: 0;top:0;z-index: 1;"></canvas>
 
         var graph = d3.select("#main")
                         .attr("width", width)
-                        .attr("height", height)
+                        .attr("height", 2000)
                         .append("g")
                         .attr("transform", "translate(-30, 20)");
         var projection = d3.geoAlbersUsa()
@@ -962,6 +1013,9 @@ function autoAdvance(){
     mini();
 }
 
+
+
+
 var playTimer = setInterval(function(){
   if (autoplay == true && clicked == true && massflag.length == 49){
     autoAdvance();
@@ -970,10 +1024,17 @@ var playTimer = setInterval(function(){
 
 d3.selectAll("#auto")
   .on("click", function(d){
-    autoplay = autoplay == true? false:true;    
+    autoplay = autoplay == true? false:true;
+
+
   })
 
+
+
+
 </script>
+
+
 
 </body>
 </html>
