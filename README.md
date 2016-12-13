@@ -49,13 +49,19 @@ The new approach is to invoke the requestAnimationFrame() instead of setInterval
 
 
 2.widely adopt canvas element
+
+
 In this project, we don’t adopt svg but canvas as main html element to move points because the canvas element is part of HTML5 and allows for dynamic, scriptable rendering of 2D shapes and bitmap images
 
 
 3.trailing effects
+
+
 Adding trailing effect for points gives a cool sense of moving in a certain direction, without which the whole map looks mundane. But realizing trailing effect is not as easy as it looks. Refilling the canvas will erase traces completely, which is against our purpose of keeping parts of traces.
 To address this, we refill the canvas with an opacity of 0.1 at a rate exactly equal to the speed of moving points such that a visible trail is left
 
 
 4.autoplay function
+
+
 The flow will continue to next year automatically after last year’s flow finishes. The reason for this is that the US Census website doesn’t provide month-by-month data, and we have to flatten the data, spread it evenly through the year to simulate the monthly movement. And with the autoplay function, we can mimic the passing of time(although not perfectly).
