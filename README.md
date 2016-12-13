@@ -1,18 +1,16 @@
 # Population-Migration-of-USA
 
 
-[This is a link](https://yijiang93.github.io/Population-Migration-of-USA/)
+[This is the link](https://yijiang93.github.io/Population-Migration-of-USA/)
 
 #Data
 Our data source is the census of governments, which provides state-to-state and regional migration flows over years.
-We download data for 10 years in this website. We cleaned the data in Excel and transformed migration data in a 50*50 matrix in a csv file.
+We download data for 10 years in this website. We cleaned the data in Excel and transformed migration data in a 50 by 50 matrix in a csv file.
 
 #Interactions
 In the flow map, we have interactions to help users navigating the data.
 Users can hover to a specific state. The chosen state will be highlighted, and the name of the state will be shown to the side.
 After the flow to one state starts, you can hover over another state. This action will temporarily make all flow from other state invisible, and shows only the flow from this state.
-
-
 
 #Design achievement
 We feel like dark blue background + white outlines and texts is quite minimalist and sleek. We also decided to remove the state aberrations on the map, and show the name of selected or hovered state besides the map.
@@ -20,16 +18,22 @@ We feel like dark blue background + white outlines and texts is quite minimalist
 
 1. Migration part(flowing part)
 
+![Flowing part](img/Flowing part.png)
+
   Each flow has a definition, that it has origin-destination pairing, and the amount of dots in the flow is based on data.
-  it is more accurate in terms of geographical fidelity. The origin-destination pairing is not ambiguous and the amount of flow is shown more obviously. We choose white squares with side lengths of 2 as it gives better performance and fits the black background color of US map.
+  It is more accurate in terms of geographical fidelity. The origin-destination pairing is not ambiguous and the amount of flow is shown more obviously. We choose white squares with side lengths of 2 as it gives better performance and fits the black background color of US map.
 
 
 2. A heatmap
+
+![Heatmap](img/heatmap.png)
 
   On the top right corner is a small heatmap of the US. It shows the general migrating population from other states to the state users selected.
 
 
 3. A ten-year migration line chart.
+
+![Line chart](img/line chart.png)
 
   There are two lines in the chart, representing out-flow and in-flow respectively. At each timestamp(year) there is a highlighter, click it will change the year to the one shown on the axis, and if a state is selected already, it will start the flow of this year of the selected state.
 
@@ -48,8 +52,7 @@ We feel like dark blue background + white outlines and texts is quite minimalist
   The new approach is to invoke the requestAnimationFrame() instead of setInterval(). It tells the browser that you wish to perform an animation and requests that the browser call a specified function to update an animation before the next repaint. The method takes as an argument a callback to be invoked before the repaint. With this method, we finally achieved the visual effects we wanted.
 
 
-2. Widely adopt canvas element
-
+2. Widely adoptted canvas element
 
   In this project, we don’t adopt svg but canvas as main html element to move points because the canvas element is part of HTML5 and allows for dynamic, scriptable rendering of 2D shapes and bitmap images.
 
