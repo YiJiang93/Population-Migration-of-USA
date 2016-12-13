@@ -3,16 +3,16 @@
 
 [This is the link](https://yijiang93.github.io/Population-Migration-of-USA/)
 
-#Data
+## Data
 Our data source is the census of governments, which provides state-to-state and regional migration flows over years.
 We download data for 10 years in this website. We cleaned the data in Excel and transformed migration data in a 50 by 50 matrix in a csv file.
 
-#Interactions
+## Interactions
 In the flow map, we have interactions to help users navigating the data.
 Users can hover to a specific state. The chosen state will be highlighted, and the name of the state will be shown to the side.
 After the flow to one state starts, you can hover over another state. This action will temporarily make all flow from other state invisible, and shows only the flow from this state.
 
-#Design achievement
+## Design achievement
 We feel like dark blue background + white outlines and texts is quite minimalist and sleek. We also decided to remove the state aberrations on the map, and show the name of selected or hovered state besides the map.
 
 
@@ -39,7 +39,7 @@ We feel like dark blue background + white outlines and texts is quite minimalist
 
 
 
-#Technical achievement
+## Technical achievement
 
 1. Map design
 
