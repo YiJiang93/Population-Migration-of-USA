@@ -10,7 +10,7 @@ We download data for 10 years in this website. We cleaned the data in Excel and 
 ## Interactions
 In the flow map, we have interactions to help users navigating the data.
 Users can hover to a specific state. The chosen state will be highlighted, and the name of the state will be shown to the side.
-After the flow to one state starts, you can hover over another state. This action will temporarily make all flow from other state invisible, and shows only the flow from this state.
+After the flow to one state starts, you can hover over another state. This action will temporarily make all flow from other states invisible, and shows only the flow from this state.
 
 ## Design achievement
 We feel like dark blue background + white outlines and texts is quite minimalist and sleek. We also decided to remove the state aberrations on the map, and show the name of selected or hovered state besides the map.
@@ -26,14 +26,14 @@ We feel like dark blue background + white outlines and texts is quite minimalist
 
 2. A heatmap
 
-  ![Heatmap](img/heatmap.png)
+  ![Heatmap](img/Heatmap.png)
 
   On the top right corner is a small heatmap of the US. It shows the general migrating population from other states to the state users selected.
 
 
 3. A ten-year migration line chart.
 
-  ![Line chart](img/line chart.png)
+  ![Line chart](img/Line chart.png)
 
   There are two lines in the chart, representing out-flow and in-flow respectively. At each timestamp(year) there is a highlighter, click it will change the year to the one shown on the axis, and if a state is selected already, it will start the flow of this year of the selected state.
 
