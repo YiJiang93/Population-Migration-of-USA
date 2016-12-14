@@ -35,27 +35,25 @@ In the flow map, we have interactions to help users navigating the data.
 We feel like dark blue background + white outlines and texts is quite minimalist and sleek. We also decided to remove the state aberrations on the map, and show the name of selected or hovered state besides the map.
 
 
-1. Migration part(flowing part)
-
-  ![Flowing part](img/Flowing part.png)
-
+1. Migration part (Flowing part)
+  
   Each flow has a definition, that it has origin-destination pairing, and the amount of dots in the flow is based on data.
   It is more accurate in terms of geographical fidelity. The origin-destination pairing is not ambiguous and the amount of flow is shown more obviously. We choose white squares with side lengths of 2 as it gives better performance and fits the black background color of US map.
 
+  ![Flowing part](img/Flowing part.png)
+
 
 2. A heatmap
+  
+  On the top right corner is a small heatmap of the US. It shows the general migrating population from other states to the state users selected.
 
   ![Heatmap](img/Heatmap.png)
 
-  On the top right corner is a small heatmap of the US. It shows the general migrating population from other states to the state users selected.
-
-
 3. A ten-year migration line chart.
-
-  ![Line chart](img/Line chart.png)
 
   There are two lines in the chart, representing out-flow and in-flow respectively. At each timestamp(year) there is a highlighter, click it will change the year to the one shown on the axis, and if a state is selected already, it will start the flow of this year of the selected state.
 
+  ![Line chart](img/Line chart.png)
 
 
 ## Technical achievement
