@@ -1,9 +1,18 @@
-# Population-Migration-of-USA
+﻿# Population-Migration-of-USA
 
 
 [This is the link](https://yijiang93.github.io/Population-Migration-of-USA/)
 
 ![Overview](img/Overview.png)
+
+
+
+#Teammates
+Zheng Nie, znie@wpi.edu, nzholmes;
+
+Shijian Li, sli8@wpi.edu, lawdpls;
+
+Yi Jiang, yjiang@wpi.edu, YiJiang93;
 
 ## Data
 Our data source is the census of governments, which provides state-to-state and regional migration flows over years.
