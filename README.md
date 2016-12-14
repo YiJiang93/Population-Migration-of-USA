@@ -3,7 +3,7 @@
 
 [This is the link](https://yijiang93.github.io/Population-Migration-of-USA/)
 
-![Overview](Overview.png)
+![Overview](img/Overview.png)
 
 ## Data
 Our data source is the census of governments, which provides state-to-state and regional migration flows over years.
