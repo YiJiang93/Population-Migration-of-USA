@@ -9,8 +9,25 @@ We download data for 10 years in this website. We cleaned the data in Excel and 
 
 ## Interactions
 In the flow map, we have interactions to help users navigating the data.
-Users can hover to a specific state. The chosen state will be highlighted, and the name of the state will be shown to the side.
-After the flow to one state starts, you can hover over another state. This action will temporarily make all flow from other states invisible, and shows only the flow from this state.
+
+1. Hover to inspect a specific state
+
+  Users can hover to a specific state. The chosen state will be highlighted, and the name of the state will be shown to the side.
+  
+  ![Hover](img/Hover.png)
+
+2. Click state to start flow
+
+  The flow will start, the minimap will appear, and the information tab will change accordingly(the migration number will change in real time).
+  
+  ![Click](img/Click.png)
+
+3. Inspect states after flow starts
+  
+  After the flow to one state starts, you can hover over another state. This action will temporarily make all flow from other states invisible, and shows only the flow from this state.
+  
+  ![Inspect](img/Inspect.png)
+ 
 
 ## Design achievement
 We feel like dark blue background + white outlines and texts is quite minimalist and sleek. We also decided to remove the state aberrations on the map, and show the name of selected or hovered state besides the map.
